@@ -156,10 +156,3 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-
-
-# TEMPORAL: Crear superusuario automáticamente
-from django.contrib.auth import get_user_model
-User = get_user_model()
-if not User.objects.filter(username='Merlin').exists():
-    User.objects.create_superuser('Merlin', 'dferacosta@hotmail.com', 'Daveianeda2332')
