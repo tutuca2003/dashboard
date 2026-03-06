@@ -1,0 +1,23 @@
+# Entorno Virtual
+v_env/
+venv/
+env/
+ENV/
+
+# Base de Datos Local (Privada)
+db.sqlite3
+
+# Archivos de Python (Temporales/Compilados)
+*.pyc
+__pycache__/
+
+# Archivos de configuración de sistema y editores
+.DS_Store
+.vscode/
+.idea/
+
+# Archivos de variables de entorno (Donde irán tus contraseñas)
+.env
+
+# Archivos estáticos generados
+staticfiles/
