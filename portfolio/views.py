@@ -105,6 +105,7 @@ def stock_detail(request, pk):
     stock = get_object_or_404(Stock, pk=pk)
     return render(request, 'stock_detail.html', {'stock': stock})
 
+import time
 
 def update_all_values(request):
     stocks = Stock.objects.all()
@@ -128,6 +129,8 @@ def update_all_values(request):
 
         stock.save()
         updated += 1
+
+        time.sleep(0.5)  
 
     messages.success(request, f"Valores actualizados para {updated} acciones.")
     return redirect('dashboard')
