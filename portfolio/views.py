@@ -113,6 +113,9 @@ def update_all_values(request):
     for stock in stocks:
         # Obtener precio y nombre
         price, name = get_stock_info(stock.symbol)
+
+        print("SYMBOL:", stock.symbol, "PRICE:", price)
+
         if price:
             stock.price = price
         if name:
