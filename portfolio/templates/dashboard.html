@@ -9,24 +9,39 @@
 <body>
 <h1 class="mt-3 mb-4 fw-bold text-center">Dashboard de Acciones</h1>
 
+<form action="{% url 'admin:logout' %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit">Salir</button>
+</form>
 
-<div class="d-flex gap-2 mb-4">
-    <a href="{% url 'update_all_values' %}" class="btn btn-success flex-fill">🔄 Actualizar</a>
-    <a href="/admin/" class="btn btn-dark flex-fill">🛠 Admin</a>
-    <a href="{% url 'dashboard' %}" class="btn btn-primary flex-fill">Todas las Acciones</a>
-    <a href="{% url 'dashboard_strategy' 'trading' %}" class="btn btn-primary flex-fill">Acciones para Trading</a>
-    <a href="{% url 'dashboard_strategy' 'long_term' %}" class="btn btn-primary flex-fill">Acciones para Cartera</a>
+{% comment %} --- FILTROS DINÁMICOS --- {% endcomment %}
+{% with request.GET.urlencode as current_params %}
+
+<div class="mb-3 d-flex gap-2 flex-wrap">
+    <strong>Estrategia:</strong>
+    <a href="{% url 'dashboard' %}?strategy=xt{% if current_params %}&{{ current_params }}{% endif %}" class="btn {% if current_strategy == "xt" %}btn-primary{% else %}btn-outline-primary{% endif %}">XTB</a>
+    <a href="{% url 'dashboard' %}?strategy=bm{% if current_params %}&{{ current_params }}{% endif %}" class="btn {% if current_strategy == "bm" %}btn-primary{% else %}btn-outline-primary{% endif %}">B M</a>
+    <a href="{% url 'dashboard' %}?strategy=qu{% if current_params %}&{{ current_params }}{% endif %}" class="btn {% if current_strategy == "qu" %}btn-primary{% else %}btn-outline-primary{% endif %}">Quant</a>
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Todas</a>
 </div>
 
+<div class="mb-3 d-flex gap-2 flex-wrap">
+    <strong>Trade:</strong>
+    <a href="{% url 'dashboard' %}?trade_status=buy{% if current_params %}&{{ current_params }}{% endif %}" class="btn {% if current_trade_status == "buy" %}btn-success{% else %}btn-outline-success{% endif %}">Comprado</a>
+    <a href="{% url 'dashboard' %}?trade_status=sell{% if current_params %}&{{ current_params }}{% endif %}" class="btn {% if current_trade_status == "sell" %}btn-danger{% else %}btn-outline-danger{% endif %}">Vendido</a>
+    <a href="{% url 'dashboard' %}?trade_status=none{% if current_params %}&{{ current_params }}{% endif %}" class="btn {% if current_trade_status == "none" %}btn-secondary{% else %}btn-outline-secondary{% endif %}">Esperar</a>
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Todos</a>
+</div>
 
+<div class="mb-3 d-flex gap-2 flex-wrap">
+    <strong>Analizada:</strong>
+    <a href="{% url 'dashboard' %}?analyzed=true{% if current_params %}&{{ current_params }}{% endif %}" class="btn {% if current_analyzed == "true" %}btn-info{% else %}btn-outline-info{% endif %}">✔ Sí</a>
+    <a href="{% url 'dashboard' %}?analyzed=false{% if current_params %}&{{ current_params }}{% endif %}" class="btn {% if current_analyzed == "false" %}btn-warning{% else %}btn-outline-warning{% endif %}">❌ No</a>
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Todas</a>
+</div>
 
-{% if messages %}
-    <ul>
-        {% for message in messages %}
-            <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
+{% endwith %}
+
 
 
 <table class="table table-striped table-hover">
@@ -34,49 +49,39 @@
         <th class="text-center">Acción</th>
         <th class="text-center">Nombre</th>
         <th class="text-center">Precio</th>
-        <th class="text-center">FV Simple</th>
-        <th class="text-center">FV DCF</th>
-        <th class="text-center">FV Promedio</th>
+        <th class="text-center">Fair Valiu</th>
         <th class="text-center">Estrategia</th>
-        <th class="text-center">Trade</th>
-        <th class="text-center">Precio Trade</th>
-        <th class="text-center">Diferencia</th>
         <th class="text-center">Analizada</th>
+        <th class="text-center">Trade</th>
         <th class="text-center">Observaciones</th>
+        <th> <form action="{% url 'admin:logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">Salir</button>
+            </form>
+        </th>
     </tr>
     {% for stock in stocks %}
     <tr>
-        <td class="text-center"><a href="{% url 'stock_detail' stock.pk %}">{{ stock.symbol }}</a></td>
+        <td class="text-center">
+            <a href="{{ stock.admin_url }}">{{ stock.symbol }}</a>
+        </td>
+        
         <td class="text-center">{{ stock.name }}</td>
         <td class="text-center">{{ stock.price|floatformat:2 }}</td>
-        <td class="text-center">{{ stock.fv_simple|floatformat:2 }}</td>
-        <td class="text-center">{{ stock.fv_dcf|floatformat:2 }}</td>
-        <td class="text-center">{{ stock.fv_avg|floatformat:2 }}</td>
+        <td class="text-center"></td>
         <td class="text-center">{{ stock.get_strategy_display }}</td>
+        <td class="text-center">
+            {% if stock.analyzed %}
+            ✔
+            {% else %}
+            ❌
+            {% endif %}
+        </td>
         <td class="text-center">{{ stock.get_trade_status_display }}</td>
-
-<td class="text-center">
-{% if stock.trade_price %}
-{{ stock.trade_price }}
-{% endif %}
-</td>
-
-<td class="text-center">
-{% if stock.trade_difference %}
-{{ stock.trade_difference|floatformat:2 }}
-{% endif %}
-</td>
-
-<td class="text-center">
-{% if stock.analyzed %}
-✔
-{% else %}
-❌
-{% endif %}
-</td>
-
-<td class="text-center">{{ stock.notes }}</td>
-
+        <td class="text-center">{{ stock.Observaciones }}</td>
+        <td class="text-center">
+        <a href="{% url 'update_stock_price' stock.pk %}" class="btn btn-sm btn-primary">Actualizar Precio</a>
+        </td>
     </tr>
     {% endfor %}
 </table>
