@@ -2,16 +2,6 @@ from django.shortcuts import render
 from .models import Stock
 from django.contrib.admin.views.decorators import staff_member_required
 
-'''
-@staff_member_required
-def dashboard(request):
-    stocks = Stock.objects.all()
-
-    return render(request, "dashboard.html", {
-        "stocks": stocks
-    })
-'''
-
 from django.shortcuts import redirect, get_object_or_404
 import yfinance as yf  # pip install yfinance
 
@@ -31,12 +21,6 @@ def update_stock_price(request, pk):
 
     return redirect('dashboard')
 
-
-
-
-from django.shortcuts import render
-from django.contrib.admin.views.decorators import staff_member_required
-from .models import Stock
 
 @staff_member_required
 def dashboard(request):
