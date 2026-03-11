@@ -21,49 +21,32 @@ def update_stock_price(request, pk):
 
     return redirect('dashboard')
 '''
+
+import logging
+
+logger = logging.getLogger(__name__)
+
 @staff_member_required
 def update_stock_price(request, pk):
     stock = get_object_or_404(Stock, pk=pk)
 
     try:
         ticker = yf.Ticker(stock.symbol)
+        # Pedimos solo el último día. Esto es MUCHO más rápido que .info
+        df = ticker.history(period="1d")
         
-        # Opción A: Más rápida y menos probable de ser bloqueada
-        data = ticker.history(period="1d")
-        
-        if not data.empty:
-            # Tomamos el último precio de cierre disponible
-            price = data['Close'].iloc[-1]
-            stock.price = price
+        if not df.empty:
+            # .iloc[-1] toma el último precio de cierre
+            latest_price = df['Close'].iloc[-1]
+            stock.price = latest_price
             stock.save()
         else:
-            # Si history falla, intentamos fast_info como respaldo
-            price = ticker.fast_info.get('last_price')
-            if price:
-                stock.price = price
-                stock.save()
-                
+            logger.warning(f"No se encontraron datos para {stock.symbol}")
+
     except Exception as e:
-        # En Render, usa logging en lugar de print para ver los errores en la consola de logs
-        import logging
-        logging.error(f"Error actualizando {stock.symbol}: {e}")
+        logger.error(f"Error en Render al actualizar {stock.symbol}: {e}")
 
     return redirect('dashboard')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
