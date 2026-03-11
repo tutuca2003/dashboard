@@ -5,7 +5,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import redirect, get_object_or_404
 import yfinance as yf  # pip install yfinance
 
-
+'''
 @staff_member_required
 def update_stock_price(request, pk):
     stock = get_object_or_404(Stock, pk=pk)
@@ -20,6 +20,51 @@ def update_stock_price(request, pk):
         print(f"Error actualizando {stock.symbol}: {e}")
 
     return redirect('dashboard')
+'''
+@staff_member_required
+def update_stock_price(request, pk):
+    stock = get_object_or_404(Stock, pk=pk)
+
+    try:
+        ticker = yf.Ticker(stock.symbol)
+        
+        # Opción A: Más rápida y menos probable de ser bloqueada
+        data = ticker.history(period="1d")
+        
+        if not data.empty:
+            # Tomamos el último precio de cierre disponible
+            price = data['Close'].iloc[-1]
+            stock.price = price
+            stock.save()
+        else:
+            # Si history falla, intentamos fast_info como respaldo
+            price = ticker.fast_info.get('last_price')
+            if price:
+                stock.price = price
+                stock.save()
+                
+    except Exception as e:
+        # En Render, usa logging en lugar de print para ver los errores en la consola de logs
+        import logging
+        logging.error(f"Error actualizando {stock.symbol}: {e}")
+
+    return redirect('dashboard')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @staff_member_required
