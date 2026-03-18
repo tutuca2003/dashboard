@@ -11,26 +11,6 @@ def update_stock_price(request, pk):
     stock = get_object_or_404(Stock, pk=pk)
 
     try:
-        data = yf.Ticker(stock.symbol)
-        price = data.info.get('regularMarketPrice')
-        if price:
-            stock.price = price
-            stock.save()
-    except Exception as e:
-        print(f"Error actualizando {stock.symbol}: {e}")
-
-    return redirect('dashboard')
-'''
-
-import logging
-
-logger = logging.getLogger(__name__)
-
-@staff_member_required
-def update_stock_price(request, pk):
-    stock = get_object_or_404(Stock, pk=pk)
-
-    try:
         ticker = yf.Ticker(stock.symbol)
         # Pedimos solo el último día. Esto es MUCHO más rápido que .info
         df = ticker.history(period="1d")
@@ -48,7 +28,23 @@ def update_stock_price(request, pk):
 
     return redirect('dashboard')
 
+'''
 
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.admin.views.decorators import staff_member_required
+from .models import Stock
+import sheets_service 
+
+@staff_member_required
+def update_stock_price(request, pk):
+    stock = get_object_or_404(Stock, pk=pk)
+    try:
+        sheet = sheets_service.conectar_sheet()
+        celda = sheet.find(stock.symbol.upper())
+        if celda:
+            datos_fila = sheet.row_values(celda.row)
+            # Ajuste de columnas: B=1, C=2, D=3
+            stock.price = float(datos_fila[1].replace(',', '.')) if datos_fila[1] else stock.price  
 
 @staff_member_required
 def dashboard(request):
