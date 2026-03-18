@@ -1,0 +1,24 @@
+# --- SEGURIDAD CRÍTICA ---
+# No subir la llave de Google Sheets
+google_key.json
+
+# No subir la clave secreta de Django
+.env
+db.sqlite3
+
+# --- PYTHON ---
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+
+# --- SISTEMA ---
+.DS_Store
+Thumbs.db
+
+# --- DJANGO ---
+local_settings.py
+staticfiles/
+media/
