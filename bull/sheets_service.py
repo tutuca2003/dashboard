@@ -50,4 +50,4 @@ def conectar_sheet():
     client = gspread.authorize(creds)
     
     # Usa el nombre exacto de tu Sheet aquí
-    return client.open("dashboard-acciones").get_worksheet(0)
+    return client.open("Stock").get_worksheet(0)
