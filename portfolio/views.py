@@ -111,7 +111,7 @@ def dashboard(request):
         stocks = stocks.filter(query_plataformas)
 
     # 3. Aplicar Filtro de Estado (Si se eligió uno)
-    if f_status in ['0', '1', '2']:
+    if f_status in ['0', '1', '2', '3']:
         stocks = stocks.filter(trade_status=f_status)
 
       # --- Lógica de Paginación ---

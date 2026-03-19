@@ -19,6 +19,7 @@
         <strong>Acciones:</strong>
         <a href="{% url 'dashboard' %}" class="btn btn-outline-success btn-sm">Todas</a>
         <a href="{% url 'admin:portfolio_stock_add' %}" class="btn btn-outline-success btn-sm">Nueva</a>
+        
     </div>
 
     <div class="d-flex align-items-center gap-2 border-end pe-4">
@@ -43,6 +44,10 @@
         
         <a href="?{% if current_status == '2' %}{% else %}status=2{% endif %}{% if current_xtb %}&xtb=true{% endif %}{% if current_bmt %}&bmt=true{% endif %}{% if current_qut %}&qut=true{% endif %}" 
            class="btn btn-sm {% if current_status == '2' %}btn-danger{% else %}btn-outline-danger{% endif %}">INACTIVA</a>
+        
+        <a href="?{% if current_status == '3' %}{% else %}status=3{% endif %}{% if current_xtb %}&xtb=true{% endif %}{% if current_bmt %}&bmt=true{% endif %}{% if current_qut %}&qut=true{% endif %}" 
+        
+           class="btn btn-sm {% if current_status == '3' %}btn-primary{% else %}btn-outline-primary{% endif %}">NUEVA</a>   
     </div>
 
     <div class="d-flex align-items-center gap-2">
@@ -108,24 +113,17 @@
         </td>
         
         
-        <td class="text-center"> {% if stock.trade_status == '1' %}
-        <span class="badge rounded-pill bg-success px-3 py-2 text-white" 
-              style="width: 100px; display: inline-block;">
-              OPERATIVA
-        </span>
+      <td class="text-center"> 
+    {% if stock.trade_status == '1' %}
+        <span class="badge rounded-pill bg-success px-3 py-2 text-white" style="width: 100px; display: inline-block;">OPERATIVA</span>
     {% elif stock.trade_status == '2' %}
-        <span class="badge rounded-pill bg-danger px-3 py-2 text-white" 
-              style="width: 100px; display: inline-block;">
-              INACTIVA
-        </span>
+        <span class="badge rounded-pill bg-danger px-3 py-2 text-white" style="width: 100px; display: inline-block;">INACTIVA</span>
+    {% elif stock.trade_status == '3' %}
+        <span class="badge rounded-pill bg-primary px-3 py-2 text-white" style="width: 100px; display: inline-block;">NUEVA</span>
     {% else %}
-        <span class="badge rounded-pill bg-warning text-dark px-3 py-2" 
-              style="width: 100px; display: inline-block;">
-              EVALUAR
-        </span>
+        <span class="badge rounded-pill bg-warning text-dark px-3 py-2" style="width: 100px; display: inline-block;">EVALUAR</span>
     {% endif %}
 </td>
-        
     
         <td class="text-center">{{ stock.fecha_inactivacion|default_if_none:"" }}</td>
         <td class="text-center">{{ stock.Observaciones }}</td>
