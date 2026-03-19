@@ -34,7 +34,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-h*%0m=+jrv#$rt)-4xcv(jktzm3#=p)euwu6gy_lz)7^m)p*r2')
 
 # DEBUG debe ser True en tu PC y False en Render
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+#DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # Permitimos el dominio de Render y el local
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
@@ -43,7 +43,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
+DEBUG = True
 
 '''ALLOWED_HOSTS = []'''
 
@@ -154,5 +154,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Mejora el rendimiento de los archivos estáticos (los comprime)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Al salir, redirigir al login o al dashboard
+LOGOUT_REDIRECT_URL = '/admin/'
 
 

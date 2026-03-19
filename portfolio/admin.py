@@ -5,7 +5,7 @@ from django.utils.html import format_html
 from django.shortcuts import redirect
 
 class StockAdmin(admin.ModelAdmin):
-    list_display = ('symbol', 'name', 'strategy', 'price', 'fv', 'goto_dashboard_link')
+    list_display = ('symbol', 'name', 'price', 'fv', 'goto_dashboard_link')
 
     def goto_dashboard_link(self, obj):
         return format_html('<a class="button" href="{}">🏠 Ir al Dashboard</a>', '/')

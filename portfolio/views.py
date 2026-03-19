@@ -4,6 +4,8 @@ from .models import Stock
 from bull import sheets_service
 from datetime import datetime
 import time
+from django.core.paginator import Paginator # Importante
+from django.db.models import Q
 
 @staff_member_required
 def update_stock_price(request, pk):
@@ -55,7 +57,7 @@ def update_stock_price(request, pk):
         print(f"🔴 Error al actualizar desde el Dashboard: {e}")
     
     return redirect('dashboard')
-
+'''
 @staff_member_required
 def dashboard(request):
     """
@@ -80,4 +82,52 @@ def dashboard(request):
         "current_strategy": strategy,
         "current_trade_status": trade_status,
         "current_analyzed": analyzed,
+    })'''
+
+from django.db.models import Q
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+# Asegurate de importar tu modelo Stock
+
+@login_required # O @staff_member_required según prefieras
+def dashboard(request):
+    """
+    Vista principal: Filtra por Plataformas (OR) y por Estado (AND).
+    """
+    stocks = Stock.objects.all().order_by('symbol')
+
+    # 1. Capturar Parámetros
+    f_xtb = request.GET.get('xtb') == 'true'
+    f_bmt = request.GET.get('bmt') == 'true'
+    f_qut = request.GET.get('qut') == 'true'
+    f_status = request.GET.get('status')
+
+    # 2. Aplicar Filtro de Plataformas (Si hay alguna seleccionada)
+    if f_xtb or f_bmt or f_qut:
+        query_plataformas = Q()
+        if f_xtb: query_plataformas |= Q(xtb=True)
+        if f_bmt: query_plataformas |= Q(bmt=True)
+        if f_qut: query_plataformas |= Q(qut=True)
+        stocks = stocks.filter(query_plataformas)
+
+    # 3. Aplicar Filtro de Estado (Si se eligió uno)
+    if f_status in ['0', '1', '2']:
+        stocks = stocks.filter(trade_status=f_status)
+
+      # --- Lógica de Paginación ---
+    paginator = Paginator(stocks, 12) # 14 acciones por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "dashboard.html", {
+        "stocks": page_obj, # Ahora pasamos el objeto de página
+        "current_xtb": f_xtb,
+        "current_bmt": f_bmt,
+        "current_qut": f_qut,
+        "current_status": f_status,
+        "current_params": request.GET.urlencode(),
     })
+
+
+
+

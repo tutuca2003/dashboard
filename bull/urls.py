@@ -16,9 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views as auth_views # 1. Importá las vistas de autenticación
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('portfolio.urls')),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
    
 ]
+

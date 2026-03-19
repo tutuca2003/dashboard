@@ -28,11 +28,12 @@ def sync_to_sheets(sender, instance, created, **kwargs):
         sheet.update_acell(f'C{fila}', f'=GOOGLEFINANCE("{simbolo}"; "name")')
         
         # Si tienes estrategia o fair value, los mandamos también
+        '''
         if instance.strategy:
             sheet.update_acell(f'E{fila}', instance.get_strategy_display())
         
         sheet.update_acell(f'I{fila}', f'Auto-Sync: {ahora}')
-        
+        '''
         print(f"⚡ Señal: {simbolo} sincronizado automáticamente con Excel.")
     except Exception as e:
         print(f"❌ Error en señal: {e}")
