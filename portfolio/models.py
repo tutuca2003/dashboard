@@ -28,6 +28,7 @@ class Stock(models.Model):
         ('0', 'EVALUAR'),
         ('1', 'OPERATIVA'),
         ('2', 'INACTIVA'),
+        ('sell', 'VENTA'), # Agregá esta línea si no está
     ]
 
     trade_status = models.CharField(
