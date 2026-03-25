@@ -162,6 +162,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Al salir, redirigir al login o al dashboard
-LOGOUT_REDIRECT_URL = '/admin/'
+#LOGOUT_REDIRECT_URL = '/admin/'
 
 
+# Esto le dice a Django dónde está tu página de acceso
+LOGIN_URL = 'login' 
+
+# Esto le dice a dónde ir después de loguearse con éxito
+LOGIN_REDIRECT_URL = 'dashboard'  # O el nombre que tenga tu index de portfolio
