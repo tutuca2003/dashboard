@@ -113,6 +113,12 @@
         <th class="text-center">Nombre</th>
         <th class="text-center">Precio</th>
         <th class="text-center">Fair Value</th>
+        <th class="text-center">Long</th>
+        <th class="text-center">Stop</th>
+        <th class="text-center">Profit</th>
+        <th class="text-center">Short</th>
+        <th class="text-center">Stop</th>
+        <th class="text-center">Profit</th>
         <th class="text-center">XTB</th>
         <th class="text-center">BMT</th>
         <th class="text-center">QUT</th>
@@ -130,7 +136,14 @@
         <td class="text-center">{{ stock.name|default_if_none:"" }}</td>
         <td class="text-center">{{ stock.price|floatformat:2 }}</td>
         <td class="text-center"></td>
-                
+
+        <td class="text-center">{{ stock.ref_long|default_if_none:"" }}</td>
+        <td class="text-center">{{ stock.long_stop|default_if_none:"" }}</td>
+        <td class="text-center">{{ stock.long_profit|default_if_none:"" }}</td>
+        <td class="text-center">{{ stock.ref_short|default_if_none:"" }}</td>
+        <td class="text-center">{{ stock.short_stop|default_if_none:"" }}</td>
+        <td class="text-center">{{ stock.short_profit|default_if_none:"" }}</td>
+ 
         <td class="text-center">
              {% if stock.xtb %}
                 <i class="bi bi-check-circle-fill text-success" style="font-size: 1.2rem;"></i>

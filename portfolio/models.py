@@ -17,12 +17,21 @@ class Stock(models.Model):
     price = models.FloatField(default=0.0)
     fv = models.FloatField(default=0.0)
 
+    # --- Estrategia (Referencias de Texto) ---
+    long_stop = models.CharField(max_length=50, blank=True, null=True, verbose_name="Long Stop Loss")
+    long_profit = models.CharField(max_length=50, blank=True, null=True, verbose_name="Long Take Profit")
+    ref_long = models.CharField(max_length=100, blank=True, null=True, verbose_name="Referencia Long") # Agregado
+    
+    short_stop = models.CharField(max_length=50, blank=True, null=True, verbose_name="Short Stop Loss")
+    short_profit = models.CharField(max_length=50, blank=True, null=True, verbose_name="Short Take Profit")
+    ref_short = models.CharField(max_length=100, blank=True, null=True, verbose_name="Referencia Short") # Agregado
+
     # --- Estados de la Acción ---
     TRADE_STATUS = [
         ('0', 'EVALUAR'),
         ('1', 'OPERATIVA'),
         ('2', 'INACTIVA'),
-        ('3', 'NUEVA'),  # Estado para el botón azul
+        ('3', 'NUEVA'),
         ('sell', 'VENTA'),
     ]
 
@@ -47,29 +56,18 @@ class Stock(models.Model):
     Observaciones = models.TextField(blank=True)
 
     def save(self, *args, **kwargs):
-        """
-        Lógica de Guardado: 
-        1. Estampa la fecha con formato destacado [dd/mm/aaaa] >> al inicio.
-        2. Si ya detecta una fecha al inicio, no hace nada para evitar duplicados.
-        """
         fecha_hoy = timezone.now().strftime("%d/%m/%Y")
-        # Formato visual que se destaca del resto del texto
         formato_destacado = f"[{fecha_hoy}] >> "
-
-        # Usamos una expresión regular para detectar si ya hay una fecha al inicio.
-        # r'^\[\d{2}/\d{2}/\d{4}\]' busca exactamente "[dos-números/dos-números/cuatro-números]"
-        ya_tiene_fecha = re.match(r'^\[\d{2}/\d{2}/\d{4}\]', self.Observaciones)
+        
+        obs = self.Observaciones or ""
+        ya_tiene_fecha = re.match(r'^\[\d{2}/\d{2}/\d{4}\]', obs)
 
         if not ya_tiene_fecha:
-            # Si el campo está vacío o no tiene fecha, la agregamos
-            # Esto une la fecha nueva con lo que ya estaba escrito (si hubiera algo)
-            self.Observaciones = f"{formato_destacado}{self.Observaciones}"
+            self.Observaciones = f"{formato_destacado}{obs}"
         
-        # Guardamos el modelo
         super().save(*args, **kwargs)
 
     def admin_url(self):
-        """Genera el enlace directo para editar esta acción en el Admin de Django"""
         return reverse('admin:portfolio_stock_change', args=[self.id])
 
     def __str__(self):
