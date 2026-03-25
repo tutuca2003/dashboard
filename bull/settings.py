@@ -166,7 +166,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Esto le dice a Django dónde está tu página de acceso
-LOGIN_URL = 'login' 
+#LOGIN_URL = 'login' 
 
 # Esto le dice a dónde ir después de loguearse con éxito
-LOGIN_REDIRECT_URL = 'dashboard'  # O el nombre que tenga tu index de portfolio
+#LOGIN_REDIRECT_URL = 'dashboard'  # O el nombre que tenga tu index de portfolio
+
+LOGIN_URL = '/admin/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/admin/login/' # O '/' si preferís que al salir te mande al dashboard vacío
