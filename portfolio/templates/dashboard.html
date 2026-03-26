@@ -80,7 +80,7 @@
     <div class="d-flex align-items-center gap-2 border-end pe-4">
         <strong>Estado:</strong>
         <a href="?{% if current_status == '0' %}{% else %}status=0{% endif %}{% if current_xtb %}&xtb=true{% endif %}{% if current_bmt %}&bmt=true{% endif %}{% if current_qut %}&qut=true{% endif %}" 
-           class="btn btn-sm {% if current_status == '0' %}btn-warning text-dark{% else %}btn-outline-warning text-dark{% endif %}">EVALUAR</a>
+           class="btn btn-sm {% if current_status == '0' %}btn-warning text-dark{% else %}btn-outline-warning text-dark{% endif %}">SEGUIR</a>
         
         <a href="?{% if current_status == '1' %}{% else %}status=1{% endif %}{% if current_xtb %}&xtb=true{% endif %}{% if current_bmt %}&bmt=true{% endif %}{% if current_qut %}&qut=true{% endif %}" 
            class="btn btn-sm {% if current_status == '1' %}btn-success{% else %}btn-outline-success{% endif %}">OPERATIVA</a>
@@ -177,7 +177,7 @@
     {% elif stock.trade_status == '3' %}
         <span class="badge rounded-pill bg-primary px-3 py-2 text-white" style="width: 100px; display: inline-block;">NUEVA</span>
     {% else %}
-        <span class="badge rounded-pill bg-warning text-dark px-3 py-2" style="width: 100px; display: inline-block;">EVALUAR</span>
+        <span class="badge rounded-pill bg-warning text-dark px-3 py-2" style="width: 100px; display: inline-block;">SEGUIR</span>
     {% endif %}
 </td>
     

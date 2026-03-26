@@ -28,7 +28,7 @@ class Stock(models.Model):
 
     # --- Estados de la Acción ---
     TRADE_STATUS = [
-        ('0', 'EVALUAR'),
+        ('0', 'SEGUIR'),
         ('1', 'OPERATIVA'),
         ('2', 'INACTIVA'),
         ('3', 'NUEVA'),
