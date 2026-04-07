@@ -114,3 +114,5 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
+
+print(f"DEBUG: Conectando a -> {os.environ.get('DB_EXTERNAL_URL')}")
